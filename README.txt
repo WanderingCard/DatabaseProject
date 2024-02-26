@@ -4,6 +4,8 @@ Customer Schema:
 
 {
 	_id: num,
+	fName: string,
+	lName: string,
 	address: string,
 	phoneNumber: string,
 	cars: [
@@ -33,6 +35,8 @@ Technican Schema
 
 {
 	_id: num,
+	fname: string,
+	lname: string,
 	services: [
 		serviceIdOne,
 		serviceIdTwo,
