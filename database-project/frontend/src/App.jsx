@@ -28,12 +28,14 @@ export default App;*/
 import React, { useState, useEffect } from 'react';
 import CustomerForm from './components/CustomerForm';
 import NewCar from './components/NewCar';
+import JobList from './components/JobList';
 import axios from 'axios';
 import { Container, Typography } from '@mui/material';
 
 function App() {
   const [customers, setCustomers] = useState([]);
   const [cars, setCars] = useState([]);
+  const [jobs, setJobs] = useState([]);
 
   useEffect(() => {
     axios.get('http://localhost:3005/customers')
@@ -50,6 +52,14 @@ function App() {
       })
       .catch(error => {
         console.error('Error fetching cars:', error);
+      });
+
+    axios.get('http://localhost:3007/jobs')
+      .then(response => {
+        setJobs(response.data);
+      })
+      .catch(error => {
+        console.error('Error fetching jobs:', error);
       });
   }, []);
 
@@ -75,8 +85,17 @@ function App() {
             <strong>Customer ID:</strong> {car.customerId}, <strong>Model:</strong> {car.model}, <strong>Make:</strong> {car.make}, <strong>Year:</strong> {car.year}
           </li>
         ))}
-      </ul> 
-      </Container>
+      </ul>
+      <JobList />
+      <h2>Jobs</h2>
+      <ul>
+        {jobs.map(job => (
+          <li key={job.id}>
+            <strong>Car:</strong> {job.car}, <strong>Service:</strong> {job.service}
+          </li>
+        ))}
+      </ul>
+    </Container>
   );
 }
 
