@@ -14,10 +14,12 @@
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
     "styled-components": "^6.1.8",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "concurrently": "^7.0.0",
+    "json-server": "^0.16.3"
   },
   "scripts": {
-    "start": "export PORT=8080 && react-scripts start",
+    "start": "concurrently \"json-server --watch customer.json --port 3001\" \"json-server --watch cars.json --port 3002\" \"PORT=3000 react-scripts start\"",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

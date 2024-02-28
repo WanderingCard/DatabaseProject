@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { TextField, Button, Grid, Typography } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { TextField, Button, Grid, Typography, MenuItem } from '@mui/material';
+import axios from 'axios';
 
 function NewCar() {
   const [carData, setCarData] = useState({
@@ -10,6 +11,17 @@ function NewCar() {
     make: '',
     vin: '',
   });
+  const [customers, setCustomers] = useState([]);
+
+  useEffect(() => {
+    axios.get('http://localhost:3001/customers')
+      .then(response => {
+        setCustomers(response.data);
+      })
+      .catch(error => {
+        console.error('Error fetching customers:', error);
+      });
+  }, []);
 
   const handleChange = (e) => {
     setCarData({
@@ -20,7 +32,21 @@ function NewCar() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Add logic to handle form submission (e.g., sending data to backend)
+    axios.post('http://localhost:3002/cars', carData)
+      .then(response => {
+        console.log('Car added successfully:', response.data);
+        setCarData({
+          customerId: '',
+          model: '',
+          trim: '',
+          year: '',
+          make: '',
+          vin: '',
+        });
+      })
+      .catch(error => {
+        console.error('Error adding car:', error);
+      });
   };
 
   return (
@@ -32,12 +58,19 @@ function NewCar() {
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
             <TextField
-              label="Customer ID"
-              name="customerID"
-              value={carData.customerID}
+              select
+              label="Customer"
+              name="customerId"
+              value={carData.customerId}
               onChange={handleChange}
               fullWidth
-            />
+            >
+              {customers.map(customer => (
+                <MenuItem key={customer.id} value={customer.id}>
+                  {customer.firstName} {customer.lastName}
+                </MenuItem>
+              ))}
+            </TextField>
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField

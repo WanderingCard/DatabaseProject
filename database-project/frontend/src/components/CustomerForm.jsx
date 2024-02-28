@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { TextField, Button, Grid, Typography } from '@mui/material';
+import axios from 'axios';
 
 function CustomerForm() {
   const [customerData, setCustomerData] = useState({
@@ -18,7 +19,19 @@ function CustomerForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Add logic to handle form submission (e.g., sending data to backend)
+    axios.post('http://localhost:3001/customers', customerData)
+      .then(response => {
+        console.log('Customer added successfully:', response.data);
+        setCustomerData({
+          firstName: '',
+          lastName: '',
+          address: '',
+          phoneNumber: '',
+        });
+      })
+      .catch(error => {
+        console.error('Error adding customer:', error);
+      });
   };
 
   return (

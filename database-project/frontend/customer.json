@@ -1,0 +1,18 @@
+{
+  "customers": [
+    {
+      "id": "7658",
+      "firstName": "Michael",
+      "lastName": "DeVito",
+      "address": "105 rive Bangor PA",
+      "phoneNumber": "4845235895"
+    },
+    {
+      "id": "8b64",
+      "firstName": "Mark",
+      "lastName": "John",
+      "address": "456 redOak",
+      "phoneNumber": "56789234"
+    }
+  ]
+}
