@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { TextField, Button, Grid, Typography, MenuItem } from '@mui/material';
+import { TextField, Button, Grid, Typography, MenuItem, Alert } from '@mui/material';
 import axios from 'axios';
 
 function NewCar() {
@@ -12,9 +12,11 @@ function NewCar() {
     vin: '',
   });
   const [customers, setCustomers] = useState([]);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [errorFields, setErrorFields] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:3001/customers')
+    axios.get('http://localhost:3005/customers')
       .then(response => {
         setCustomers(response.data);
       })
@@ -32,9 +34,15 @@ function NewCar() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios.post('http://localhost:3002/cars', carData)
+    const emptyFields = Object.keys(carData).filter(key => carData[key] === '');
+    if (emptyFields.length > 0) {
+      setErrorFields(emptyFields);
+      setAlertMessage('Please fill in all required fields.');
+      return;
+    }
+    axios.post('http://localhost:3006/cars', carData)
       .then(response => {
-        console.log('Car added successfully:', response.data);
+        setAlertMessage('Car added successfully');
         setCarData({
           customerId: '',
           model: '',
@@ -46,6 +54,7 @@ function NewCar() {
       })
       .catch(error => {
         console.error('Error adding car:', error);
+        setAlertMessage('Error adding customer: ' + error.message)
       });
   };
 
@@ -54,6 +63,7 @@ function NewCar() {
       <Typography variant="h5" component="h2" gutterBottom>
         New Car Form
       </Typography>
+      {alertMessage && <Alert severity="success">{alertMessage}</Alert>}
       <form onSubmit={handleSubmit}>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
@@ -64,6 +74,8 @@ function NewCar() {
               value={carData.customerId}
               onChange={handleChange}
               fullWidth
+              required
+              error={errorFields.includes('customer')}
             >
               {customers.map(customer => (
                 <MenuItem key={customer.id} value={customer.id}>
@@ -79,6 +91,8 @@ function NewCar() {
               value={carData.model}
               onChange={handleChange}
               fullWidth
+              required
+              error={errorFields.includes('model')}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -88,6 +102,8 @@ function NewCar() {
               value={carData.trim}
               onChange={handleChange}
               fullWidth
+              required
+              error={errorFields.includes('trim')}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -97,6 +113,8 @@ function NewCar() {
               value={carData.year}
               onChange={handleChange}
               fullWidth
+              required
+              error={errorFields.includes('year')}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -106,6 +124,8 @@ function NewCar() {
               value={carData.make}
               onChange={handleChange}
               fullWidth
+              required
+              error={errorFields.includes('make')}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -115,6 +135,8 @@ function NewCar() {
               value={carData.vin}
               onChange={handleChange}
               fullWidth
+              required
+              error={errorFields.includes('vin')}
             />
           </Grid>
           <Grid item xs={12}>

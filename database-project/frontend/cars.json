@@ -2,21 +2,12 @@
   "cars": [
     {
       "id": "bdd9",
-      "customerId": "c",
-      "model": "c",
-      "trim": "c",
-      "year": "c",
-      "make": "c",
-      "vin": "c"
-    },
-    {
-      "id": "e008",
-      "customerId": "7658",
+      "customerId": "3245",
       "model": "Tesla",
       "trim": "Luxary",
       "year": "2014",
-      "make": "Y",
-      "vin": "3242upgAFE7"
+      "make": "Model Y",
+      "vin": "32554FTUF"
     }
   ]
 }

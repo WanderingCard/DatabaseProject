@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TextField, Button, Grid, Typography } from '@mui/material';
+import { TextField, Button, Grid, Typography, Alert } from '@mui/material';
 import axios from 'axios';
 
 function CustomerForm() {
@@ -9,6 +9,8 @@ function CustomerForm() {
     address: '',
     phoneNumber: '',
   });
+  const [alertMessage, setAlertMessage] = useState('');
+  const [errorFields, setErrorFields] = useState([]);
 
   const handleChange = (e) => {
     setCustomerData({
@@ -19,9 +21,15 @@ function CustomerForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios.post('http://localhost:3001/customers', customerData)
+    const emptyFields = Object.keys(customerData).filter(key => customerData[key] === '');
+    if (emptyFields.length > 0) {
+      setErrorFields(emptyFields);
+      setAlertMessage('Please fill in all required fields.');
+      return;
+    }
+    axios.post('http://localhost:3005/customers', customerData)
       .then(response => {
-        console.log('Customer added successfully:', response.data);
+        setAlertMessage('Customer added successfully.');
         setCustomerData({
           firstName: '',
           lastName: '',
@@ -31,6 +39,7 @@ function CustomerForm() {
       })
       .catch(error => {
         console.error('Error adding customer:', error);
+        setAlertMessage('Error adding customer: ' + error.message);
       });
   };
 
@@ -39,6 +48,7 @@ function CustomerForm() {
       <Typography variant="h5" component="h2" gutterBottom>
         New Customer Form
       </Typography>
+      {alertMessage && <Alert severity="success">{alertMessage}</Alert>}
       <form onSubmit={handleSubmit}>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
@@ -48,6 +58,8 @@ function CustomerForm() {
               value={customerData.firstName}
               onChange={handleChange}
               fullWidth
+              required
+              error={errorFields.includes('firstName')}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -57,6 +69,8 @@ function CustomerForm() {
               value={customerData.lastName}
               onChange={handleChange}
               fullWidth
+              required
+              error={errorFields.includes('lastName')}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -66,6 +80,8 @@ function CustomerForm() {
               value={customerData.address}
               onChange={handleChange}
               fullWidth
+              required
+              error={errorFields.includes('address')}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -75,6 +91,8 @@ function CustomerForm() {
               value={customerData.phoneNumber}
               onChange={handleChange}
               fullWidth
+              required
+              error={errorFields.includes('phoneNumber')}
             />
           </Grid>
           <Grid item xs={12}>

@@ -19,7 +19,7 @@
     "json-server": "^0.16.3"
   },
   "scripts": {
-    "start": "concurrently \"json-server --watch customer.json --port 3001\" \"json-server --watch cars.json --port 3002\" \"PORT=3000 react-scripts start\"",
+    "start": "concurrently \"json-server --watch customer.json --port 3005\" \"json-server --watch cars.json --port 3006\" \"react-scripts start PORT=3000\"",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

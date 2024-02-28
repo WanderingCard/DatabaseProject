@@ -36,7 +36,7 @@ function App() {
   const [cars, setCars] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:3001/customers')
+    axios.get('http://localhost:3005/customers')
       .then(response => {
         setCustomers(response.data);
       })
@@ -44,7 +44,7 @@ function App() {
         console.error('Error fetching customers:', error);
       });
 
-    axios.get('http://localhost:3002/cars')
+    axios.get('http://localhost:3006/cars')
       .then(response => {
         setCars(response.data);
       })
