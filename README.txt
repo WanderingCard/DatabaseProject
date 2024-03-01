@@ -48,7 +48,24 @@ Job Schema:
 {
 	_id: num,
 	car: carId
-	service: linktToServiceId
+	service: [
+		serviceIdOne,
+		serviceIdTwo
+	]
 	date: timeString,
 	technican: technicanId
+}
+
+Make Schema:
+
+{
+	_id: num,
+	label: string
+}
+
+Model Schema:
+
+{
+	_id: num,
+	label: string
 }
