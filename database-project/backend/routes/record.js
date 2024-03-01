@@ -1,3 +1,5 @@
+// Router Template. 
+
 import express from "express";
 
 import db from "../db/connection.js";
@@ -7,13 +9,13 @@ import { ObjectId } from "mongodb";
 const router = express.Router();
 
 router.get("/", async (req, res) => {
-    let collection = await db.collection("records");
+    let collection = await db.collection("Test");
     let results = await collection.find({}).toArray();
     res.send(results).status(200);
 });
 
 router.get("/:id", async (req, res) => {
-    let collection = await db.collection("records");
+    let collection = await db.collection("Test");
     let query = {_id: new ObjectId(req.params.id) };
     let result = await collection.findOne(query);
 
@@ -28,8 +30,8 @@ router.post("/", async (req, res) => {
             position: req.body.position,
             level: req.body.level,
         };
-        let collection = await db.collection("records");
-        let results = await collection.insertOne(newDocument);
+        let collection = await db.collection("Test");
+        let result = await collection.insertOne(newDocument);
         res.send(result).status(204);
     } catch (err) {
         console.error(err);
