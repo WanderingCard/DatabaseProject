@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Typography, List, ListItem, ListItemText, Grid, TextField, Button, Alert, Select, MenuItem } from '@mui/material';
+import { Typography, List, ListItem, ListItemText, Grid, TextField, Button, Alert, Select, MenuItem, InputLabel } from '@mui/material';
 import axios from 'axios';
 
 function JobList() {
@@ -13,6 +13,9 @@ function JobList() {
   const [errorFields, setErrorFields] = useState([]);
   const [cars, setCars] = useState([]);
   const [filteredJobs, setFilteredJobs] = useState([]);
+  const [technicians, setTechnicians] = useState([]);
+
+  const topServices = ['Oil Change', 'Tire Rotation', 'Brake Inspection', 'Engine Tune-up', 'Car Wash'];
 
   useEffect(() => {
     axios.get('http://localhost:3006/cars')
@@ -31,6 +34,20 @@ function JobList() {
       })
       .catch(error => {
         console.error('Error fetching jobs:', error);
+      });
+  }, []);
+
+  useEffect(() => {
+    axios.get('http://localhost:3008/technician')
+      .then(response => {
+        const formattedTechnicians = response.data.map(tech => ({
+          id: tech.id,
+          name: `${tech.fname} ${tech.lname}`
+        }));
+        setTechnicians(formattedTechnicians);
+      })
+      .catch(error => {
+        console.error('Error fetching technicians:', error);
       });
   }, []);
 
@@ -74,8 +91,8 @@ function JobList() {
       <form onSubmit={handleSubmit}>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
+            <InputLabel>Car</InputLabel>
             <Select
-              label="Car"
               name="car"
               value={jobData.car}
               onChange={handleChange}
@@ -94,41 +111,56 @@ function JobList() {
             </Select>
           </Grid>
           <Grid item xs={12} sm={6}>
-            <TextField
-              label="Service"
+            <InputLabel>Service</InputLabel>
+            <Select
               name="service"
               value={jobData.service}
               onChange={handleChange}
               fullWidth
               required
               error={errorFields.includes('service')}
-            />
+            >
+              <MenuItem value="" disabled>
+                Select a service
+              </MenuItem>
+              {topServices.map(service => (
+                <MenuItem key={service} value={service}>
+                  {service}
+                </MenuItem>
+              ))}
+            </Select>
           </Grid>
           <Grid item xs={12} sm={6}>
+            <InputLabel>Date</InputLabel>
             <TextField
-              label="Date"
               type="date"
               name="date"
               value={jobData.date}
               onChange={handleChange}
               fullWidth
               required
-              InputLabelProps={{
-                shrink: true,
-              }}
               error={errorFields.includes('date')}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
-            <TextField
-              label="Technician"
+            <InputLabel>Technician</InputLabel>
+            <Select
               name="technician"
               value={jobData.technician}
               onChange={handleChange}
               fullWidth
               required
               error={errorFields.includes('technician')}
-            />
+            >
+              <MenuItem value="" disabled>
+                Select a technician
+              </MenuItem>
+              {technicians.map(technician => (
+                <MenuItem key={technician.id} value={technician.name}>
+                  {technician.name}
+                </MenuItem>
+              ))}
+            </Select>
           </Grid>
           <Grid item xs={12}>
             <Button type="submit" variant="contained" color="primary">

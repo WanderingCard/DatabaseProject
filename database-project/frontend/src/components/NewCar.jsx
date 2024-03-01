@@ -15,6 +15,9 @@ function NewCar() {
   const [alertMessage, setAlertMessage] = useState('');
   const [errorFields, setErrorFields] = useState([]);
 
+  const availableModels = ['Truck', 'SUV', 'Sedan', 'Minivan', 'Convertible', 'Coupe', 'Sports Car'];
+  const topCarCompanies = ['Toyota', 'Volkswagen', 'Ford', 'Honda', 'General Motors', 'Nissan', 'BMW', 'Mercedes-Benz', 'Tesla', 'Hyundai', 'Volvo'];
+
   useEffect(() => {
     axios.get('http://localhost:3005/customers')
       .then(response => {
@@ -58,6 +61,12 @@ function NewCar() {
       });
   };
 
+  const years = [];
+  const currentYear = new Date().getFullYear();
+  for (let i = currentYear; i >= 1900; i--) {
+    years.push(i);
+  }
+
   return (
     <div style={{ backgroundColor: '#f0f0f0', padding: '20px', borderRadius: '5px', marginTop: '20px' }}>
       <Typography variant="h5" component="h2" gutterBottom>
@@ -86,6 +95,25 @@ function NewCar() {
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
+              select
+              label="Make"
+              name="make"
+              value={carData.make}
+              onChange={handleChange}
+              fullWidth
+              required
+              error={errorFields.includes('make')}
+            >
+              {topCarCompanies.map(company => (
+                <MenuItem key={company} value={company}>
+                  {company}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              select
               label="Model"
               name="model"
               value={carData.model}
@@ -93,7 +121,13 @@ function NewCar() {
               fullWidth
               required
               error={errorFields.includes('model')}
-            />
+            >
+              {availableModels.map(model => (
+                <MenuItem key={model} value={model}>
+                  {model}
+                </MenuItem>
+              ))}
+            </TextField>
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
@@ -108,6 +142,7 @@ function NewCar() {
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
+              select
               label="Year"
               name="year"
               value={carData.year}
@@ -115,18 +150,13 @@ function NewCar() {
               fullWidth
               required
               error={errorFields.includes('year')}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              label="Make"
-              name="make"
-              value={carData.make}
-              onChange={handleChange}
-              fullWidth
-              required
-              error={errorFields.includes('make')}
-            />
+            >
+              {years.map(year => (
+                <MenuItem key={year} value={year}>
+                  {year}
+                </MenuItem>
+              ))}
+            </TextField>
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
