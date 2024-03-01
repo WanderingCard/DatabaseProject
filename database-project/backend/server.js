@@ -1,58 +1,14 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const bodyParser = require('body-parser');
-const cors = require('cors');
+import express from "express";
+import cors from "cors";
+import records from "./routes/record.js"
 
+const PORT = process.env.PORT || 5050;
 const app = express();
-app.use(bodyParser.json());
+
 app.use(cors());
+app.use(express.json());
+app.use("/record", records);
 
-mongoose.connect('mongodb://localhost:27017/my_database', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
-const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'MongoDB connection error:'));
-
-const customerSchema = new mongoose.Schema({
-  firstName: String,
-  lastName: String,
-  address: String,
-  phoneNumber: String,
-});
-const Customer = mongoose.model('Customer', customerSchema);
-
-const carSchema = new mongoose.Schema({
-  customerId: mongoose.Schema.Types.ObjectId,
-  model: String,
-  trim: String,
-  year: String,
-  make: String,
-  vin: String,
-});
-const Car = mongoose.model('Car', carSchema);
-
-app.post('/customers', async (req, res) => {
-  try {
-    const newCustomer = new Customer(req.body);
-    await newCustomer.save();
-    res.status(201).json(newCustomer);
-  } catch (err) {
-    res.status(400).json({ message: err.message });
-  }
-});
-
-app.post('/cars', async (req, res) => {
-  try {
-    const newCar = new Car(req.body);
-    await newCar.save();
-    res.status(201).json(newCar);
-  } catch (err) {
-    res.status(400).json({ message: err.message });
-  }
-});
-
-const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`Server listening on port ${PORT}`);
 });
