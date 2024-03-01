@@ -1,3 +1,6 @@
+//This file is not needed anymore as JobList contains the sceduler
+
+
 import React, { useState } from 'react';
 import { Typography, TextField, Button, Grid } from '@mui/material';
 

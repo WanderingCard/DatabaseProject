@@ -25,10 +25,14 @@ function JobList() {
   }, []);
 
   useEffect(() => {
-    // Filter jobs based on the cars fetched from the API
-    const filteredJobs = jobs.filter(job => cars.some(car => car.id === job.carId));
-    setFilteredJobs(filteredJobs);
-  }, [cars]);
+    axios.get('http://localhost:3007/jobs')
+      .then(response => {
+        setFilteredJobs(response.data);
+      })
+      .catch(error => {
+        console.error('Error fetching jobs:', error);
+      });
+  }, []);
 
   const handleChange = (e) => {
     setJobData({
@@ -60,13 +64,6 @@ function JobList() {
         setAlertMessage('Error adding job: ' + error.message);
       });
   };
-
-  // Dummy data for testing
-  const jobs = [
-    { id: 1, carId: 1, service: 'Service 1', date: '2024-02-27', technician: 'Technician 1' },
-    { id: 2, carId: 2, service: 'Service 2', date: '2024-02-28', technician: 'Technician 2' },
-    { id: 3, carId: 3, service: 'Service 3', date: '2024-02-29', technician: 'Technician 3' },
-  ];
 
   return (
     <div style={{ backgroundColor: '#f0f0f0', padding: '20px', borderRadius: '5px', marginTop: '20px' }}>

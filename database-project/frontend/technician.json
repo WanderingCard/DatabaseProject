@@ -1,0 +1,20 @@
+{
+  "technician": [
+    {
+      "id": "3762",
+      "fname": "Michael",
+      "lname": "Smith",
+      "services": [
+        "Car"
+      ]
+    },
+    {
+      "id": "7dc5",
+      "fname": "John",
+      "lname": "Smith",
+      "services": [
+        "Car"
+      ]
+    }
+  ]
+}

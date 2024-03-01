@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TextField, Button, Grid, Typography, Alert } from '@mui/material';
 import axios from 'axios';
 
@@ -11,6 +11,19 @@ function CustomerForm() {
   });
   const [alertMessage, setAlertMessage] = useState('');
   const [errorFields, setErrorFields] = useState([]);
+  const [usedPhoneNumbers, setUsedPhoneNumbers] = useState([]);
+
+  useEffect(() => {
+    // Fetch existing phone numbers from the API
+    axios.get('http://localhost:3005/customers')
+      .then(response => {
+        const phoneNumbers = response.data.map(customer => customer.phoneNumber);
+        setUsedPhoneNumbers(phoneNumbers);
+      })
+      .catch(error => {
+        console.error('Error fetching phone numbers:', error);
+      });
+  }, []);
 
   const handleChange = (e) => {
     setCustomerData({
@@ -27,6 +40,11 @@ function CustomerForm() {
       setAlertMessage('Please fill in all required fields.');
       return;
     }
+    if (usedPhoneNumbers.includes(customerData.phoneNumber)) {
+      setErrorFields(['phoneNumber']);
+      setAlertMessage('Phone number already exists. Please use a different phone number.');
+      return;
+    }
     axios.post('http://localhost:3005/customers', customerData)
       .then(response => {
         setAlertMessage('Customer added successfully.');
@@ -36,6 +54,7 @@ function CustomerForm() {
           address: '',
           phoneNumber: '',
         });
+        setUsedPhoneNumbers([...usedPhoneNumbers, response.data.phoneNumber]); // Add the newly added phone number to the list of used phone numbers
       })
       .catch(error => {
         console.error('Error adding customer:', error);
@@ -48,7 +67,7 @@ function CustomerForm() {
       <Typography variant="h5" component="h2" gutterBottom>
         New Customer Form
       </Typography>
-      {alertMessage && <Alert severity="success">{alertMessage}</Alert>}
+      {alertMessage && <Alert severity="error">{alertMessage}</Alert>}
       <form onSubmit={handleSubmit}>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
@@ -93,6 +112,7 @@ function CustomerForm() {
               fullWidth
               required
               error={errorFields.includes('phoneNumber')}
+              helperText={errorFields.includes('phoneNumber') ? 'Phone number already taken' : ''}
             />
           </Grid>
           <Grid item xs={12}>

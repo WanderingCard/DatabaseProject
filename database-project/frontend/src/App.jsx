@@ -31,6 +31,7 @@ import NewCar from './components/NewCar';
 import JobList from './components/JobList';
 import axios from 'axios';
 import { Container, Typography } from '@mui/material';
+import TechnicianForm from './components/TechnicianForm';
 
 function App() {
   const [customers, setCustomers] = useState([]);
@@ -95,6 +96,7 @@ function App() {
           </li>
         ))}
       </ul>
+      <TechnicianForm />
     </Container>
   );
 }
