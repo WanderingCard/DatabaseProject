@@ -1,6 +1,7 @@
 // Router Template. 
 
 import express from "express";
+import bodyParser from "body-parser"
 
 import db from "../db/connection.js";
 
@@ -8,7 +9,7 @@ import { ObjectId } from "mongodb";
 
 const router = express.Router();
 
-let collection = db.collection("Test");
+let collection = await db.collection("IntegerationTest");
 
 router.get("/", async (req, res) => {
     // let collection = await db.collection("Test");
@@ -28,9 +29,7 @@ router.get("/:id", async (req, res) => {
 router.post("/", async (req, res) => {
     try {
         let newDocument = {
-            name: req.body.name,
-            position: req.body.position,
-            level: req.body.level,
+            data:req.params['data']
         };
         // let collection = await db.collection("Test");
         let result = await collection.insertOne(newDocument);
@@ -46,9 +45,7 @@ router.patch("/:id", async (req, res) => {
         const query = {_id: new ObjectId(req.params.id) };
         const updates = {
             $set: {
-                name: req.body.name,
-                position: req.body.position,
-                level: req.body.level,
+                data: req.params.data
             },
         };
         // let collection = await db.collection("records");

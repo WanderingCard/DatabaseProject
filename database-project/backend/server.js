@@ -8,13 +8,15 @@ import records from "./routes/record.js"
 // import models from "./routes/model.js"
 // import services from "./routes/service.js"
 // import technicans from "./routes/technican.js"
+import test from "./routes/test.js"
 
 const PORT = process.env.PORT || 5050;
 const app = express();
 
 app.use(cors());
 app.use(express.json());
-app.use("/record", records);
+// app.use("/record", records);
+app.use("/test", test);
 // app.use("/cars", cars);
 // app.use("/customers", customers);
 // app.use("/jobs", jobs);
