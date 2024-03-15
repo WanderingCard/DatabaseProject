@@ -1,7 +1,6 @@
-// Router Template. 
+// Functional Integration Test Form
 
 import express from "express";
-import bodyParser from "body-parser"
 
 import db from "../db/connection.js";
 
@@ -17,6 +16,8 @@ router.get("/", async (req, res) => {
     res.send(results).status(200);
 });
 
+// req.params: Takes the parameters from the request URL (I.E in this case req.params contains id)
+
 router.get("/:id", async (req, res) => {
     // let collection = await db.collection("Test");
     let query = {_id: new ObjectId(req.params.id) };
@@ -26,10 +27,13 @@ router.get("/:id", async (req, res) => {
     else res.send(result).status(200);
 });
 
+// Req.body contains any body content of the request (this will be the JSON)
+
 router.post("/", async (req, res) => {
     try {
+        console.log(req.body)
         let newDocument = {
-            data:req.params['data']
+            data:req.body['data']
         };
         // let collection = await db.collection("Test");
         let result = await collection.insertOne(newDocument);
