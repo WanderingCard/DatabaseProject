@@ -1,104 +1,128 @@
-/*import React from 'react';
-import { Container, Typography } from '@mui/material';
-import CustomerForm from './components/CustomerForm';
-import ServiceForm from './components/ServiceForm';
-import JobScheduler from './components/JobScheduler';
-import JobList from './components/JobList';
-import ServiceReport from './components/ServiceReport';
-import NewCar from './components/NewCar';
-import './App.css';
+import React, { useState } from 'react';
+import { Button, Grid, TextField } from '@mui/material';
 
 function App() {
+  const [integrationData, setIntData] = useState([]);
+  const [fieldValue, setFieldValue] = useState("");
+  const [filterValue, setFilterValue] = useState("");
+
+  const fetchFitlerData = async () => {
+    let url = 'http://localhost:5050/test/';
+    if (filterValue !== "") {
+      url += `?filter=${filterValue}`;
+    }
+    await fetch(url, {
+      method: 'GET'
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (filterValue !== "") {
+          const filteredData = data.filter(item => item._id === filterValue);
+          setIntData(filteredData);
+        } else {
+          setIntData(data);
+        }
+        console.log(data);
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  }
+
+  const fetchAllData = async () => {
+    await fetch('http://localhost:5050/test/', {
+      method: 'GET'
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setIntData(data);
+        console.log(data);
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  }
+
+  const postData = async (value) => {
+    await fetch ('http://localhost:5050/test/', {
+      method: 'POST',
+      body: JSON.stringify({
+        data: value
+      }),
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8',
+      },
+    })
+    .then((response) => response.json())
+    .then((json) => console.log(json))
+    .catch((err) => {
+      console.log(err.message)
+    })
+  }
+
   return (
-    <Container maxWidth="md">
-      <Typography variant="h4" component="h1" align="center" gutterBottom>
-        Mechanic Shop Management
-      </Typography>
-      <CustomerForm />
-      <NewCar />
-      <ServiceForm />
-      <JobScheduler />
-      <JobList />
-      <ServiceReport />
-    </Container>
-  );
-}
-
-export default App;*/
-import React, { useState, useEffect } from 'react';
-import CustomerForm from './components/CustomerForm';
-import NewCar from './components/NewCar';
-import JobList from './components/JobList';
-import axios from 'axios';
-import { Container, Typography } from '@mui/material';
-import TechnicianForm from './components/TechnicianForm';
-
-function App() {
-  const [customers, setCustomers] = useState([]);
-  const [cars, setCars] = useState([]);
-  const [jobs, setJobs] = useState([]);
-
-  useEffect(() => {
-    axios.get('http://localhost:3005/customers')
-      .then(response => {
-        setCustomers(response.data);
-      })
-      .catch(error => {
-        console.error('Error fetching customers:', error);
-      });
-
-    axios.get('http://localhost:3006/cars')
-      .then(response => {
-        setCars(response.data);
-      })
-      .catch(error => {
-        console.error('Error fetching cars:', error);
-      });
-
-    axios.get('http://localhost:3007/jobs')
-      .then(response => {
-        setJobs(response.data);
-      })
-      .catch(error => {
-        console.error('Error fetching jobs:', error);
-      });
-  }, []);
-
-  return (
-    <Container maxWidth="md">
-      <Typography variant="h4" component="h1" align="center" gutterBottom>
-        Mechanic Shop Management
-      </Typography>
-      <CustomerForm />
-      <h2>Customers</h2>
-      <ul>
-        {customers.map(customer => (
-          <li key={customer.id}>
-            <strong>{customer.firstName} {customer.lastName}</strong>: {customer.address} ({customer.phoneNumber})
-          </li>
-        ))}
-      </ul>
-      <NewCar />
-      <h2>Cars</h2>
-      <ul>
-        {cars.map(car => (
-          <li key={car.id}>
-            <strong>Customer ID:</strong> {car.customerId}, <strong>Model:</strong> {car.model}, <strong>Make:</strong> {car.make}, <strong>Year:</strong> {car.year}
-          </li>
-        ))}
-      </ul>
-      <JobList />
-      <h2>Jobs</h2>
-      <ul>
-        {jobs.map(job => (
-          <li key={job.id}>
-            <strong>Car:</strong> {job.car}, <strong>Service:</strong> {job.service}
-          </li>
-        ))}
-      </ul>
-      <TechnicianForm />
-    </Container>
-  );
+    <Grid container spacing ={3} style={{width:'50vw', height:'75vh', marginLeft:'25vw', marginTop:'12.5vh'}}>
+      <Grid item xs={8}>
+        <TextField 
+          fullWidth
+          variant='outlined' 
+          label='Test' 
+          value={fieldValue}
+          onChange={(event) => {
+            setFieldValue(event.target.value)
+          }}
+        />
+      </Grid>
+      <Grid item xs={4}>
+        <Button 
+          fullWidth
+          variant='contained'
+          onClick={() => {
+            postData(fieldValue);
+            setFieldValue('');
+          }}
+        >
+          Add Data
+        </Button>
+      </Grid>
+      <Grid item xs={4}>
+        <TextField
+          fullWidth
+          variant='outlined'
+          label='Filter'
+          value={filterValue}
+          onChange={(event) => {
+            setFilterValue(event.target.value)
+          }}
+        />
+      </Grid>
+      <Grid item xs={4}>
+        <Button
+          variant='contained'
+          onClick={() => {
+            fetchFitlerData();
+          }}
+        >
+          Get Fitler Data
+        </Button>
+      </Grid>
+      <Grid item xs={4}>
+        <Button
+          variant='contained'
+          onClick={() => {
+            fetchAllData();
+          }}
+        >
+          Get All Data
+        </Button>
+      </Grid>
+      <Grid item xs={12}>
+        <pre>
+          {JSON.stringify(integrationData, null, 2)}
+        </pre>
+      </Grid>
+    </Grid>
+  )
 }
 
 export default App;

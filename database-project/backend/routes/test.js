@@ -1,4 +1,4 @@
-// Router Template. 
+// Functional Integration Test Form
 
 import express from "express";
 
@@ -8,13 +8,15 @@ import { ObjectId } from "mongodb";
 
 const router = express.Router();
 
-let collection = db.collection("Test");
+let collection = await db.collection("IntegerationTest");
 
 router.get("/", async (req, res) => {
     // let collection = await db.collection("Test");
     let results = await collection.find({}).toArray();
     res.send(results).status(200);
 });
+
+// req.params: Takes the parameters from the request URL (I.E in this case req.params contains id)
 
 router.get("/:id", async (req, res) => {
     // let collection = await db.collection("Test");
@@ -25,12 +27,13 @@ router.get("/:id", async (req, res) => {
     else res.send(result).status(200);
 });
 
+// Req.body contains any body content of the request (this will be the JSON)
+
 router.post("/", async (req, res) => {
     try {
+        console.log(req.body)
         let newDocument = {
-            name: req.body.name,
-            position: req.body.position,
-            level: req.body.level,
+            data:req.body['data']
         };
         // let collection = await db.collection("Test");
         let result = await collection.insertOne(newDocument);
@@ -46,9 +49,7 @@ router.patch("/:id", async (req, res) => {
         const query = {_id: new ObjectId(req.params.id) };
         const updates = {
             $set: {
-                name: req.body.name,
-                position: req.body.position,
-                level: req.body.level,
+                data: req.params.data
             },
         };
         // let collection = await db.collection("records");
