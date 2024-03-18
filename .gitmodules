@@ -1,0 +1,6 @@
+[submodule "DatabaseFrontend"]
+	path = DatabaseFrontend
+	url = https://github.com/WanderingCard/DatabaseFrontend
+[submodule "DatabaseBackend"]
+	path = DatabaseBackend
+	url = https://github.com/WanderingCard/DatabaseBackend
