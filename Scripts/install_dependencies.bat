@@ -1,0 +1,1 @@
+cd ../DatabaseBackend && npm install && cd ../DatabaseFrontend && npm install
