@@ -36,7 +36,7 @@ import TechnicianForm from './components/TechnicianForm';
 function App() {
   const [customers, setCustomers] = useState([]);
   const [cars, setCars] = useState([]);
-  const [jobs, setJobs] = useState([]);
+  const [jobs, setJobs] = useState([]); 
 
   useEffect(() => {
     axios.get('http://localhost:3005/customers')
