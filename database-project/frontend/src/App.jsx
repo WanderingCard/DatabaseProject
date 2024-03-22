@@ -1,30 +1,3 @@
-/*import React from 'react';
-import { Container, Typography } from '@mui/material';
-import CustomerForm from './components/CustomerForm';
-import ServiceForm from './components/ServiceForm';
-import JobScheduler from './components/JobScheduler';
-import JobList from './components/JobList';
-import ServiceReport from './components/ServiceReport';
-import NewCar from './components/NewCar';
-import './App.css';
-
-function App() {
-  return (
-    <Container maxWidth="md">
-      <Typography variant="h4" component="h1" align="center" gutterBottom>
-        Mechanic Shop Management
-      </Typography>
-      <CustomerForm />
-      <NewCar />
-      <ServiceForm />
-      <JobScheduler />
-      <JobList />
-      <ServiceReport />
-    </Container>
-  );
-}
-
-export default App;*/
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Container, Typography } from '@mui/material';
@@ -80,11 +53,15 @@ function App() {
             <h2>Cars</h2>
             <NewCar />
             <ul>
-              {cars.map(car => (
-                <li key={car.id}>
-                  <strong>Customer ID:</strong> {car.customerId}, <strong>Model:</strong> {car.model}, <strong>Make:</strong> {car.make}, <strong>Year:</strong> {car.year}
-                </li>
-              ))}
+              {cars.map(car => {
+                const associatedCustomer = customers.find(customer => customer.id === car.customerId);
+                const customerName = associatedCustomer ? `${associatedCustomer.firstName} ${associatedCustomer.lastName}` : 'Unknown Customer';
+                return (
+                  <li key={car.id}>
+                    <strong>Customer Name:</strong> {customerName}, <strong>Model:</strong> {car.model}, <strong>Make:</strong> {car.make}, <strong>Year:</strong> {car.year}
+                  </li>
+                );
+              })}
             </ul>
           </div>
         );
@@ -94,11 +71,17 @@ function App() {
             <h2>Jobs</h2>
             <JobList />
             <ul>
-              {jobs.map(job => (
-                <li key={job.id}>
-                  <strong>Car:</strong> {job.car}, <strong>Service:</strong> {job.service}
-                </li>
-              ))}
+              {jobs.map(job => {
+                const associatedCar = cars.find(car => car.id === job.carId);
+                const associatedCustomer = associatedCar ? customers.find(customer => customer.id === associatedCar.customerId) : null;
+                const carDetails = associatedCar ? `${associatedCar.make} ${associatedCar.model} (${associatedCar.year})` : 'Unknown Car';
+                const customerName = associatedCustomer ? `${associatedCustomer.firstName} ${associatedCustomer.lastName}` : 'Unknown Customer';
+                return (
+                  <li key={job.id}>
+                    <strong>Job ID:</strong> {job.id}, <strong>Car:</strong> {carDetails}, <strong>Customer:</strong> {customerName}, <strong>Service:</strong> {job.service}
+                  </li>
+                );
+              })}
             </ul>
           </div>
         );
