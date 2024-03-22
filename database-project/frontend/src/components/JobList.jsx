@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Typography, List, ListItem, ListItemText, Grid, TextField, Button, Alert, Select, MenuItem, InputLabel } from '@mui/material';
 import axios from 'axios';
-import ServiceCount from './ServiceCount';
+import ServiceCount from './ServiceCount'
+import { TextField, Button, Grid, Typography, Select, MenuItem, InputLabel, List, ListItem, ListItemText, Alert } from '@mui/material';
+
+const topServices = ['Oil Change', 'Tire Rotation', 'Brake Inspection', 'Engine Tune-up', 'Car Wash'];
 
 function JobList() {
   const [jobData, setJobData] = useState({
@@ -17,8 +19,7 @@ function JobList() {
   const [technicians, setTechnicians] = useState([]);
   const [filterDate, setFilterDate] = useState('');
   const [fetchJobs, setFetchJobs] = useState(false);
-
-  const topServices = ['Oil Change', 'Tire Rotation', 'Brake Inspection', 'Engine Tune-up', 'Car Wash'];
+  const [techniciansWithNoJobs, setTechniciansWithNoJobs] = useState([]);
 
   useEffect(() => {
     axios.get('http://localhost:3006/cars')
@@ -38,11 +39,15 @@ function JobList() {
           name: `${tech.fname} ${tech.lname}`
         }));
         setTechnicians(formattedTechnicians);
+        // Filter technicians with no jobs
+        const techniciansWithJobs = filteredJobs.map(job => job.technician);
+        const techniciansWithoutJobs = formattedTechnicians.filter(tech => !techniciansWithJobs.includes(tech.name));
+        setTechniciansWithNoJobs(techniciansWithoutJobs);
       })
       .catch(error => {
         console.error('Error fetching technicians:', error);
       });
-  }, []);
+  }, [filteredJobs]);
 
   const handleChange = (e) => {
     setJobData({
@@ -196,9 +201,24 @@ function JobList() {
           </Grid>
         </Grid>
       </form>
-      {filteredJobs.length > 0 && (
+      {techniciansWithNoJobs.length > 0 && (
         <div>
           <Typography variant="h4" component="h2" gutterBottom>
+            Technicians With No Jobs
+          </Typography>
+          <List>
+            {techniciansWithNoJobs.map((technician, index) => (
+              <ListItem key={index}>
+                <ListItemText primary={technician.name} />
+              </ListItem>
+            ))}
+          </List>
+        </div>
+      )}
+      {filteredJobs.length > 0 && (
+        <div>
+          <
+          Typography variant="h4" component="h2" gutterBottom>
             Jobs for Selected Date
           </Typography>
           <List>
@@ -215,4 +235,4 @@ function JobList() {
   );
 }
 
-export default JobList
+export default JobList;

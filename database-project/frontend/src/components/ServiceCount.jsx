@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Typography, Grid, TextField, Button, Alert, Select, MenuItem, InputLabel } from '@mui/material';
 import axios from 'axios';
-import { DataGrid } from '@mui/x-data-grid';
 
 function ServiceCount({ topServices }) { 
   const [serviceCount, setServiceCount] = useState(0);
@@ -53,18 +52,12 @@ function ServiceCount({ topServices }) {
   };
 
   const generateChartData = (serviceData) => {
-    const chartData = {
-      columns: [
-        { field: 'service', headerName: 'Service' },
-        { field: 'percentage', headerName: 'Percentage' },
-      ],
-      rows: serviceData.map(service => ({
-        id: service.service,
-        service: service.service,
-        percentage: (service.count / serviceCount) * 100,
-      })),
-    };
-    setChartData(chartData);
+    const newChartData = serviceData.map(service => ({
+      id: service.service,
+      service: service.service,
+      percentage: (service.count / serviceCount) * 100,
+    }));
+    setChartData(newChartData);
   };
 
   return (
@@ -117,14 +110,17 @@ function ServiceCount({ topServices }) {
         </Grid>
       </form>
       {serviceCount > 0 && (
-        <div style={{ height: 400, width: '100%', marginTop: '20px' }}>
-          <DataGrid
-            rows={chartData.rows}
-            columns={chartData.columns}
-            pageSize={5}
-            rowsPerPageOptions={[5]}
-            checkboxSelection={false}
-          />
+        <div>
+          <Typography variant="h6" component="h3" gutterBottom>
+            Service Count Chart
+          </Typography>
+          <ul>
+            {chartData.map(item => (
+              <li key={item.id}>
+                {item.service}: {item.percentage}%
+              </li>
+            ))}
+          </ul>
         </div>
       )}
     </div>
