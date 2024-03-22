@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { TextField, Button, Grid, Typography, Table, TableContainer, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
+import { TextField, Button, Grid, Typography, Table, TableContainer, TableHead, TableRow, TableCell, TableBody, Select, MenuItem, InputLabel } from '@mui/material';
+
+const topServices = ['Oil Change', 'Tire Rotation', 'Brake Inspection', 'Engine Tune-up', 'Car Wash'];
 
 function TechnicianForm() {
   const [technicianData, setTechnicianData] = useState({
     fname: '',
     lname: '',
-    services: '',
+    services: [],
   });
   const [technicians, setTechnicians] = useState([]);
 
@@ -30,14 +32,14 @@ function TechnicianForm() {
   const handleSubmit = (e) => {
     e.preventDefault();
     const { fname, lname, services } = technicianData;
-    if (!fname || !lname || !services) {
+    if (!fname || !lname || services.length === 0) {
       alert('Please fill in all required fields.');
       return;
     }
     const newTechnician = {
       fname,
       lname,
-      services: services.split(',').map(service => service.trim()),
+      services,
     };
     axios.post('http://localhost:3008/technician', newTechnician)
       .then(response => {
@@ -45,6 +47,7 @@ function TechnicianForm() {
         setTechnicianData({
           fname: '',
           lname: '',
+          services: [],
         });
       })
       .catch(error => {
@@ -81,6 +84,24 @@ function TechnicianForm() {
             />
           </Grid>
           <Grid item xs={12}>
+            <InputLabel id="services-label">Services</InputLabel>
+            <Select
+              labelId="services-label"
+              id="services"
+              multiple
+              value={technicianData.services}
+              onChange={(e) => setTechnicianData({ ...technicianData, services: e.target.value })}
+              fullWidth
+              required
+            >
+              {topServices.map((service, index) => (
+                <MenuItem key={index} value={service}>
+                  {service}
+                </MenuItem>
+              ))}
+            </Select>
+          </Grid>
+          <Grid item xs={12}>
             <Button type="submit" variant="contained" color="primary">
               Add Technician
             </Button>
@@ -96,11 +117,12 @@ function TechnicianForm() {
             <TableRow>
               <TableCell>First Name</TableCell>
               <TableCell>Last Name</TableCell>
+              <TableCell>Services</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {technicians.map(technician => (
-              <TableRow key={technician._id}>
+            {technicians.map((technician, index) => (
+              <TableRow key={index}>
                 <TableCell>{technician.fname}</TableCell>
                 <TableCell>{technician.lname}</TableCell>
                 <TableCell>{technician.services.join(', ')}</TableCell>
