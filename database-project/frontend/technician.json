@@ -15,6 +15,15 @@
       "services": [
         "Car"
       ]
+    },
+    {
+      "id": "589d",
+      "fname": "John",
+      "lname": "Doe",
+      "services": [
+        "Oil Change",
+        "Tire Rotation"
+      ]
     }
   ]
 }

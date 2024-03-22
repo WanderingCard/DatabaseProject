@@ -26,6 +26,15 @@
       "year": null,
       "make": "Volkswagen",
       "vin": "3242upgAFE7"
+    },
+    {
+      "id": "43e1",
+      "customerId": "7658",
+      "model": "SUV",
+      "trim": "Standard",
+      "year": 2008,
+      "make": "Toyota",
+      "vin": "234o2i34H807"
     }
   ]
 }
