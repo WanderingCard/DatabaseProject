@@ -1,0 +1,1 @@
+cd ./DatabaseFrontend/ && npm start
